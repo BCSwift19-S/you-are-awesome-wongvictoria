@@ -25,30 +25,29 @@ class ViewController: UIViewController {
         
     }
     
+    func playSound(soundName: String, audioPlayer: inout AVAudioPlayer) {
+        //Can we load in file soundName?
+        if let sound = NSDataAsset(name: soundName) {
+            //check if sound.data is a sound file
+            do {
+                try audioPlayer = AVAudioPlayer(data: sound.data)
+                audioPlayer.play()
+            } catch {
+                // if sound.data is not a valid audio file
+                print ("ERROR: data in \(soundName) couldn't be played as a sound.")
+            }
+        } else {
+            // if reading in the NSDataAsset didn't work, telel the developer / report the error.
+            print ("ERROR: file \(soundName) didn't load")
+        }
+    }
+    
     func nonRepeatingRandom(lastNumber: Int, maxValue: Int) -> Int {
         var newIndex: Int
         repeat {
             newIndex = Int.random(in: 0..<maxValue)
         } while lastNumber == newIndex
         return newIndex
-    }
-    
-    func playSound(soundName: String) {
-        //Can we load in file soundName?
-        if let sound = NSDataAsset(name: soundName) {
-            //check if sound.data is a sound file
-            do {
-                try awesomePlayer = AVAudioPlayer(data: sound.data)
-                awesomePlayer.play()
-            } catch {
-                // if sound.data is not a valid audio file
-                print ("ERROR: data in \(soundName) couldn't be played as a sound.")
-            }
-            
-        } else {
-            // if reading in the NSDataAsset didn't work, telel the developer / report the error.
-            print ("ERROR: file \(soundName) didn't load")
-        }
     }
 
     @IBAction func showMessagePressed(_ sender: UIButton) {
@@ -77,7 +76,7 @@ class ViewController: UIViewController {
         
         // Play a sound
         let soundName = "sound\(soundIndex)"
-        playSound(soundName: soundName)
+        playSound(soundName: soundName, audioPlayer: &awesomePlayer)
         
     }
 }
